@@ -26,6 +26,10 @@ pub enum Error {
 pub enum DataKey {
     Escrow,
     Deadline,
+    /// Maps a roommate Address to their expected rent share (i128).
+    Shares(Address),
+    /// Maps a roommate Address to their total contributed amount (i128).
+    Contributions(Address),
 }
 
 /// Tracks an individual roommate's rent obligation and payment progress.
