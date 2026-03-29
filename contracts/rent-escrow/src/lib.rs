@@ -19,6 +19,8 @@ pub enum Error {
     Unauthorized = 3,
     /// Refunds are not available until the deadline has passed.
     DeadlineNotReached = 4,
+    /// The sum of all roommate shares exceeds the total rent amount.
+    ShareSumExceedsRent = 5,
     /// Roommate has no contributed balance to refund.
     /// No funds to refund for this roommate.
     NothingToRefund = 5,
@@ -103,6 +105,14 @@ impl RentEscrowContract {
 
         if rent_amount < MIN_RENT {
             return Err(Error::InvalidAmount);
+        }
+
+        let mut share_sum: i128 = 0;
+        for (_, share) in roommates.iter() {
+            share_sum += share;
+        }
+        if share_sum > rent_amount {
+            return Err(Error::ShareSumExceedsRent);
         }
 
         let mut roommate_states = Map::new(&env);
